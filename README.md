@@ -41,26 +41,6 @@ The application follows **Domain-Driven Design (DDD)** with a clean layered arch
 └──────────────────────────────────┘
 ```
 
-### Key DDD Principles Applied
-
-- **Rich Domain Model** — The `Device` entity encapsulates all business rules (validation, state management, invariant enforcement) with private setters and behavior methods
-- **Factory Method Pattern** — `Device.Create(...)` ensures valid aggregate construction
-- **Repository Pattern** — `IDeviceRepository` (Port) defined in the Domain, implemented in Infrastructure (Adapter)
-- **Separation of Concerns** — Each layer is a separate .NET project with enforced dependency direction
-- **Application Services** — Orchestrate use cases by coordinating the domain and repository
-- **Infrastructure Independence** — Domain layer has zero NuGet dependencies; easily swappable persistence
-
-## Tech Stack
-
-| Component | Technology |
-|-----------|-----------|
-| Framework | .NET 10 / ASP.NET Core |
-| Database | PostgreSQL 17 |
-| ORM | Entity Framework Core 10 |
-| API Docs | Swagger / OpenAPI (Swashbuckle) |
-| Testing | xUnit, FluentAssertions, NSubstitute |
-| Container | Docker, Docker Compose |
-
 ## Getting Started
 
 ### Prerequisites
@@ -222,27 +202,6 @@ dotnet test --filter "FullyQualifiedName~Unit"
 dotnet test --filter "FullyQualifiedName~Integration"
 ```
 
-### Test Coverage
-
-- **Domain Entity Tests (26)** — `DeviceEntityTests`
-  - Factory method validation (Create)
-  - Name/Brand update with in-use guard
-  - State transitions
-  - Delete eligibility (EnsureCanBeDeleted)
-  - State parsing with case-insensitivity
-  - CreationTime immutability
-
-- **Application Service Tests (28)** — `DeviceServiceTests`
-  - Mocked repository (NSubstitute) — true unit tests
-  - Create, Read, Update, Delete orchestration
-  - Domain exception propagation
-  - Partial and full update scenarios
-
-- **Integration Tests (22)** — `DevicesControllerTests`
-  - Full HTTP pipeline (POST, GET, PATCH, PUT, DELETE)
-  - Status code verification for all scenarios
-  - End-to-end data persistence verification
-
 ## Project Structure
 
 ```
@@ -317,17 +276,6 @@ test-task-devices-api/
 ├── DevicesApi.slnx
 └── README.md
 ```
-
-### Dependency Graph
-
-```
-DevicesApi.Api ──→ DevicesApi.Application ──→ DevicesApi.Domain ←── DevicesApi.Infrastructure
-      │                                                                    ▲
-      └────────────────────────────────────────────────────────────────────┘
-```
-
-> The Domain layer has **zero dependencies**. Application depends only on Domain.
-> Infrastructure implements Domain interfaces. API composes everything at startup.
 
 ## Known Limitations
 
